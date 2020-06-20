@@ -27,9 +27,9 @@ void loop() {
   int sensorValue6 = digitalRead(TouchPin[5]);
   if(sensorValue1==1) {
     if (touchFlag[0] == false) {
-      Serial.write('1');
-      Serial1.write('1');
-      Serial2.write('1');
+      Serial.println('1');
+      Serial1.println('1');
+      Serial2.println('1');
       touchFlag[0] = true;
       requestState(1);
       requestState(2);
@@ -40,9 +40,9 @@ void loop() {
   }
   if(sensorValue2==1) {
     if (!touchFlag[1]) {
-      Serial.write('2');
-      Serial1.write('2');
-      Serial2.write('2');
+      Serial.println('2');
+      Serial1.println('2');
+      Serial2.println('2');
       touchFlag[1] = true;
     }
   } else {
@@ -50,9 +50,9 @@ void loop() {
   }
   if(sensorValue3==1) {
     if (!touchFlag[2]) {
-      Serial.write('2');
-      Serial1.write('2');
-      Serial2.write('2');
+      Serial.println('2');
+      Serial1.println('2');
+      Serial2.println('2');
       touchFlag[2] = true;
     }
   } else {
@@ -60,9 +60,9 @@ void loop() {
   }
   if(sensorValue4==1) {
     if (!touchFlag[3]) {
-      Serial.write('3');
-      Serial1.write('3');
-      Serial2.write('3');
+      Serial.println('3');
+      Serial1.println('3');
+      Serial2.println('3');
       touchFlag[3] = true;
     }
   } else {
@@ -70,9 +70,9 @@ void loop() {
   }
   if(sensorValue5==1) {
     if (!touchFlag[4]) {
-      Serial.write('3');
-      Serial1.write('3');
-      Serial2.write('3');
+      Serial.println('3');
+      Serial1.println('3');
+      Serial2.println('3');
       touchFlag[4] = true;
     }
   } else {
@@ -80,9 +80,9 @@ void loop() {
   }
   if(sensorValue6==1) {
     if (!touchFlag[5]) {
-      Serial.write('4');
-      Serial1.write('4');
-      Serial2.write('4');
+      Serial.println('4');
+      Serial1.println('4');
+      Serial2.println('4');
       touchFlag[5] = true;
     }
   } else {
@@ -90,55 +90,46 @@ void loop() {
   }
   
   if(Serial.available()){
-    int elevNum=0;
     String inStr=Serial.readStringUntil('\n');
-    char ch=inStr.charAt(0);
-    currentFloor[0] = getValue(inStr,',',0).toInt();
-    int raw = getValue(inStr,',',0).toInt();
-    if (raw==0) {
-      isMoving[elevNum] = false;
-    } else {
-      isMoving[elevNum] = true;
-      moveDirection[elevNum] = (raw==1);
-    }
+    saveRequest(inStr,0);
   }
   if(Serial1.available()){
-    int elevNum=1;
     String inStr=Serial1.readStringUntil('\n');
-    char ch=inStr.charAt(0);
-    currentFloor[0] = getValue(inStr,',',0).toInt();
-    int raw = getValue(inStr,',',0).toInt();
-    if (raw==0) {
-      isMoving[elevNum] = false;
-    } else {
-      isMoving[elevNum] = true;
-      moveDirection[elevNum] = (raw==1);
-    }
+    saveRequest(inStr,1);
   }
   if(Serial2.available()){
-    int elevNum=2;
     String inStr=Serial2.readStringUntil('\n');
-    char ch=inStr.charAt(0);
-    currentFloor[0] = getValue(inStr,',',0).toInt();
-    int raw = getValue(inStr,',',0).toInt();
-    if (raw==0) {
-      isMoving[elevNum] = false;
-    } else {
-      isMoving[elevNum] = true;
-      moveDirection[elevNum] = (raw==1);
-    }
+    saveRequest(inStr,2);
   }
 }
+
+void saveRequest(String inStr,int elevNum) {
+  currentFloor[elevNum] = getValue(inStr,',',0).toInt();
+  int raw = getValue(inStr,',',0).toInt();
+  if (raw==0) {
+    isMoving[elevNum] = false;
+  } else {
+    isMoving[elevNum] = true;
+    moveDirection[elevNum] = (raw==1);
+  }
+  Serial.print(currentFloor[elevNum]);
+  Serial.print(" ");
+  Serial.print(isMoving[elevNum]);
+  Serial.print(" ");
+  Serial.print(moveDirection[elevNum]);
+  Serial.println();
+}
+
 void requestState(int elev) {
   switch (elev) {
   case 1:
-    Serial.print('S');
+    Serial.println('S');
     break;
   case 2:
-    Serial1.print('S');
+    Serial1.println('S');
     break;
   case 3:
-    Serial2.print('S');
+    Serial2.println('S');
     break;
   default:
     break;
